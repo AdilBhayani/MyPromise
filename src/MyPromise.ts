@@ -1,30 +1,29 @@
-import { PromiseState } from "./types";
+import { GenericFunction, PromiseState } from "./types";
 
-export class MyPromise {
+export class MyPromise<T> {
   state: PromiseState;
-  fullfillFunction: Function | undefined;
-  rejectFunction: Function | undefined;
-  rejectFunctionCatch: Function | undefined;
+  fullfillFunction: GenericFunction<T> | undefined;
+  rejectFunction: GenericFunction<T> | undefined;
+  rejectFunctionCatch: GenericFunction<T> | undefined;
 
 
-  constructor(providedFunction: (resolveCallback: (value: any) => any, rejectCallback: any) => any) {
+  constructor(providedFunction: (resolveCallback: GenericFunction<T>, rejectCallback: GenericFunction<T>) => void) {
     this.state = 'PENDING';
-    // After a lot of googling I realised I needed to bind this to the method
-    providedFunction(this.resolve.bind(this), this.reject.bind(this));
+    providedFunction(this.resolve, this.reject);
   }
 
-  then(fullfillFunction: Function, rejectFunction?: Function) {
+  then = (fullfillFunction: GenericFunction<T>, rejectFunction?: GenericFunction<T>) => {
     this.fullfillFunction = fullfillFunction;
     if (rejectFunction) {
       this.rejectFunction = rejectFunction;
     }
   }
 
-  catch(rejectFunction: Function) {
+  catch = (rejectFunction: GenericFunction<T>) => {
     this.rejectFunctionCatch = rejectFunction;
   }
 
-  resolve(resolveValue: any) {
+  resolve = (resolveValue: T) => {
     if (this.state === 'PENDING') {
       if (this.fullfillFunction) {
         this.state = 'RESOLVED';
@@ -33,7 +32,7 @@ export class MyPromise {
     }
   }
 
-  reject(rejectedValue: any) {
+  reject = (rejectedValue: T) => {
     if (this.state === 'PENDING') {
       this.state = 'REJECTED';
       if (this.rejectFunction) {

@@ -13,26 +13,27 @@ describe('MyPromise', () => {
     })
   })
 
-  it('resolves asynchronously', async () => {
+  it('resolves asynchronously', async (done) => {
     expect.assertions(1);
-    return new Promise((resolve) => {
+    return new MyPromise((resolve) => {
       setTimeout(() => {
         resolve('Async resolve complete')
       }, 50);
     }).then((resolvedValue: any) => {
       expect(resolvedValue).toBe('Async resolve complete');
+      done();
     })
   })
 
-  it('rejects asynchronously', async () => {
+  it('rejects asynchronously', async (done) => {
     expect.assertions(1);
     return new MyPromise((resolve, reject) => {
       setTimeout(() => {
         reject('Async reject complete')
       }, 50);
     }).catch((rejectedValue: any) => {
-      console.log('we checked this');
       expect(rejectedValue).toBe('Async reject complete');
+      done();
     })
   })
 });

@@ -1,6 +1,6 @@
 import { MyPromise } from './MyPromise';
 
-const myPromise = new MyPromise((resolve: (value: string) => void, reject: any) => {
+const myPromise = new MyPromise<string>((resolve, reject) => {
   console.log('Starting mission');
   setTimeout(() => {
     resolve('Mission complete!');
