@@ -1,12 +1,12 @@
 import { MyPromise } from './MyPromise';
 
-const myPromise = new MyPromise<string>((resolve, reject) => {
+const myPromise = new Promise((resolve: (value: string) => void, reject: (value: number) => void) => {
   console.log('Starting mission');
   setTimeout(() => {
     resolve('Mission complete!');
   }, 2000);
   setTimeout(() => {
-    reject('Mission failed!');
+    reject(9);
   }, 1000);
 });
 
